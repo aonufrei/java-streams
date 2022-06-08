@@ -1,12 +1,10 @@
 package com.aonufrei;
 
+import com.aonufrei.dto.FamilyTicketDto;
 import com.aonufrei.dto.TicketDto;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,7 +78,7 @@ public class StreamMethodsTest {
 			}
 		}
 
-		assertEquals(new HashSet<>(soldTickets), new HashSet<>(expectedTickets));
+		assertEquals(new HashSet<>(expectedTickets), new HashSet<>(soldTickets));
 	}
 
 	/**
@@ -89,6 +87,48 @@ public class StreamMethodsTest {
 	@Test
 	public void testMap() {
 
+		List<TicketDto> tickets = Arrays.asList(
+				new TicketDto("Ticket 1", true),
+				new TicketDto("Ticket 2"),
+				new TicketDto("Ticket 3"),
+				new TicketDto("Ticket 4", true),
+				new TicketDto("Ticket 5", true)
+		);
+
+		Set<String> ticketNameList = tickets.stream().map(TicketDto::getName).collect(Collectors.toSet());
+
+		Set<String> expectedTicketNameList = new HashSet<>();
+		for (TicketDto t : tickets) {
+			expectedTicketNameList.add(t.getName());
+		}
+
+		assertEquals(expectedTicketNameList, ticketNameList);
 	}
 
+	/**
+	 * flatMap
+	 */
+	@Test
+	public void testFlatMap() {
+
+		List<FamilyTicketDto> tickets = Arrays.asList(
+				FamilyTicketDto.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 2").memberNames(Arrays.asList("Robert", "Mary")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 3").memberNames(Arrays.asList("William", "Barbara", "Lisa")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 4").memberNames(Arrays.asList("Donald", "Ashley")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 5").memberNames(Collections.singletonList("Kevin")).sold(true).build()
+		);
+
+		List<String> members = tickets.stream()
+				.map(FamilyTicketDto::getMemberNames) // map to Stream<List<String>> (list of members)
+				.flatMap(Collection::stream)          // map to Stream<String>
+				.collect(Collectors.toList());        // collect to List<String>
+
+		Set<String> expectedMembers = new HashSet<>();
+		for (FamilyTicketDto t : tickets) {
+			expectedMembers.addAll(t.getMemberNames());
+		}
+
+		assertEquals(expectedMembers, new HashSet<>(members));
+	}
 }
