@@ -106,6 +106,47 @@ public class StreamMethodsTest {
 	}
 
 	/**
+	 * mapToInt, mapToFloat, mapToDouble
+	 */
+	@Test
+	public void testOtherMap() {
+
+		List<FamilyTicketDto> tickets = Arrays.asList(
+				FamilyTicketDto.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 2").memberNames(Arrays.asList("Robert", "Mary")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 3").memberNames(Arrays.asList("William", "Barbara", "Lisa")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 4").memberNames(Arrays.asList("Donald", "Ashley")).sold(true).build(),
+				FamilyTicketDto.builder().name("Ticket 5").memberNames(Collections.singletonList("Kevin")).sold(true).build()
+		);
+
+		int sumOfMembers = tickets.stream().mapToInt(it -> it.getMemberNames().size()).sum();
+		int expectedSum = 0;
+		for (FamilyTicketDto t : tickets) {
+			expectedSum += t.getMemberNames().size();
+		}
+
+		assertEquals(expectedSum, sumOfMembers);
+
+		List<Float> floats = Arrays.asList(1.2f, 1.4f, 1.5f, 1.7f);
+		double sumOfFloats = floats.stream().mapToDouble(Float::doubleValue).sum();
+		double expectedSumOfFloats = 0;
+		for (Float f : floats) {
+			expectedSumOfFloats += f.doubleValue();
+		}
+
+		assertEquals(expectedSumOfFloats, sumOfFloats);
+
+		List<Integer> integers = Arrays.asList(1, 2, 3, 4);
+		double sumOfLongs = integers.stream().mapToLong(Integer::longValue).sum();
+		double expectedSumOfLongs = 0;
+		for (Integer i : integers) {
+			expectedSumOfLongs += i.longValue();
+		}
+
+		assertEquals(expectedSumOfLongs, sumOfLongs);
+	}
+
+	/**
 	 * flatMap
 	 */
 	@Test
