@@ -109,7 +109,7 @@ public class StreamMethodsTest {
 	 * mapToInt, mapToFloat, mapToDouble
 	 */
 	@Test
-	public void testOtherMap() {
+	public void testOtherMaps() {
 
 		List<FamilyTicketDto> tickets = Arrays.asList(
 				FamilyTicketDto.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
@@ -171,5 +171,71 @@ public class StreamMethodsTest {
 		}
 
 		assertEquals(expectedMembers, new HashSet<>(members));
+	}
+
+	/**
+	 * peek
+	 */
+	@Test
+	public void testPeek() {
+
+		List<TicketDto> tickets = Arrays.asList(
+				new TicketDto("Ticket 1", true),
+				new TicketDto("Ticket 2"),
+				new TicketDto("Ticket 3"),
+				new TicketDto("Ticket 4", true),
+				new TicketDto("Ticket 5", true)
+		);
+
+		long actualCount = tickets.stream()
+				.map(TicketDto::copy)
+				.peek(it -> it.setSold(!it.getSold()))
+				.filter(TicketDto::getSold).count();
+
+		List<TicketDto> result = new ArrayList<>();
+		for (TicketDto t : tickets) {
+			TicketDto tc = t.copy();
+			tc.setSold(!tc.getSold());
+			if (tc.getSold()) {
+				result.add(tc);
+			}
+		}
+		long expectedCount = result.size();
+
+		assertEquals(expectedCount, actualCount);
+	}
+
+	/**
+	 * toArray
+	 */
+	@Test
+	public void testToArray() {
+
+		List<TicketDto> tickets = Arrays.asList(
+				new TicketDto("Ticket 1", true),
+				new TicketDto("Ticket 2"),
+				new TicketDto("Ticket 3"),
+				new TicketDto("Ticket 4", true),
+				new TicketDto("Ticket 5", true)
+		);
+
+		TicketDto[] ticketsPrimitiveArray = tickets.stream().filter(TicketDto::getSold).toArray(TicketDto[]::new);
+		int soldTicketsNumber = 0;
+		for (TicketDto t : tickets) {
+			if (t.getSold()) {
+				soldTicketsNumber++;
+			}
+		}
+		TicketDto[] expectedArray = new TicketDto[soldTicketsNumber];
+		int p = 0;
+		for (TicketDto t : tickets) {
+			if (t.getSold()) {
+				expectedArray[p] = t;
+				p++;
+			}
+		}
+
+		assertEquals(expectedArray.length, ticketsPrimitiveArray.length);
+		assertEquals(new HashSet<>(Arrays.asList(expectedArray)), new HashSet<>(Arrays.asList(ticketsPrimitiveArray)));
 	}
 }

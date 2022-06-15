@@ -3,12 +3,14 @@ package com.aonufrei.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Data
 @Builder
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketDto {
@@ -34,5 +36,14 @@ public class TicketDto {
 		this.id = id;
 		this.name = name;
 		this.sold = sold;
+	}
+
+	public TicketDto copy() {
+		return TicketDto.builder()
+				.id(id)
+				.name(name)
+				.sold(sold)
+				.buyer(buyer)
+				.build();
 	}
 }
