@@ -21,6 +21,8 @@ public class TicketDto {
 
 	private String buyer;
 
+	private Integer price;
+
 	private Boolean sold = false;
 
 	public TicketDto(String name) {
