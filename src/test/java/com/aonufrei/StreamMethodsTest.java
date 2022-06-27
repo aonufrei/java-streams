@@ -1,7 +1,7 @@
 package com.aonufrei;
 
-import com.aonufrei.dto.FamilyTicketDto;
-import com.aonufrei.dto.TicketDto;
+import com.aonufrei.dto.FamilyTicket;
+import com.aonufrei.dto.Ticket;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -26,16 +26,16 @@ public class StreamMethodsTest {
 	 */
 	@Test
 	public void testForEach() {
-		List<TicketDto> tickets = Arrays.asList(
-				new TicketDto("Ticket 1"),
-				new TicketDto("Ticket 2"),
-				new TicketDto("Ticket 3"),
-				new TicketDto("Ticket 4"),
-				new TicketDto("Ticket 5")
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("Ticket 1"),
+				new Ticket("Ticket 2"),
+				new Ticket("Ticket 3"),
+				new Ticket("Ticket 4"),
+				new Ticket("Ticket 5")
 		);
 		tickets.forEach(it -> it.setSold(true));
 
-		for (TicketDto t : tickets) {
+		for (Ticket t : tickets) {
 			assertTrue(t.getSold());
 		}
 	}
@@ -46,17 +46,17 @@ public class StreamMethodsTest {
 	 */
 	@Test
 	public void testFilter() {
-		List<TicketDto> tickets = Arrays.asList(
-				new TicketDto("Ticket 1", true),
-				new TicketDto("Ticket 2"),
-				new TicketDto("Ticket 3"),
-				new TicketDto("Ticket 4", true),
-				new TicketDto("Ticket 5", true)
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("Ticket 1", true),
+				new Ticket("Ticket 2"),
+				new Ticket("Ticket 3"),
+				new Ticket("Ticket 4", true),
+				new Ticket("Ticket 5", true)
 		);
 
-		tickets.stream().filter(TicketDto::getSold).forEach(t -> t.setBuyer("Buyer 1"));
+		tickets.stream().filter(Ticket::getSold).forEach(t -> t.setBuyer("Buyer 1"));
 
-		for (TicketDto t : tickets) {
+		for (Ticket t : tickets) {
 			if (t.getSold()) {
 				assertEquals("Buyer 1", t.getBuyer());
 				continue;
@@ -70,18 +70,18 @@ public class StreamMethodsTest {
 	 */
 	@Test
 	public void testSimpleCollect() {
-		List<TicketDto> tickets = Arrays.asList(
-				new TicketDto("Ticket 1", true),
-				new TicketDto("Ticket 2"),
-				new TicketDto("Ticket 3"),
-				new TicketDto("Ticket 4", true),
-				new TicketDto("Ticket 5", true)
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("Ticket 1", true),
+				new Ticket("Ticket 2"),
+				new Ticket("Ticket 3"),
+				new Ticket("Ticket 4", true),
+				new Ticket("Ticket 5", true)
 		);
 
-		List<TicketDto> soldTickets = tickets.stream().filter(TicketDto::getSold).collect(Collectors.toList());
+		List<Ticket> soldTickets = tickets.stream().filter(Ticket::getSold).collect(Collectors.toList());
 
-		List<TicketDto> expectedTickets = new ArrayList<>();
-		for (TicketDto t : tickets) {
+		List<Ticket> expectedTickets = new ArrayList<>();
+		for (Ticket t : tickets) {
 			if (t.getSold()) {
 				expectedTickets.add(t);
 			}
@@ -96,18 +96,18 @@ public class StreamMethodsTest {
 	@Test
 	public void testMap() {
 
-		List<TicketDto> tickets = Arrays.asList(
-				new TicketDto("Ticket 1", true),
-				new TicketDto("Ticket 2"),
-				new TicketDto("Ticket 3"),
-				new TicketDto("Ticket 4", true),
-				new TicketDto("Ticket 5", true)
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("Ticket 1", true),
+				new Ticket("Ticket 2"),
+				new Ticket("Ticket 3"),
+				new Ticket("Ticket 4", true),
+				new Ticket("Ticket 5", true)
 		);
 
-		Set<String> ticketNameList = tickets.stream().map(TicketDto::getName).collect(Collectors.toSet());
+		Set<String> ticketNameList = tickets.stream().map(Ticket::getName).collect(Collectors.toSet());
 
 		Set<String> expectedTicketNameList = new HashSet<>();
-		for (TicketDto t : tickets) {
+		for (Ticket t : tickets) {
 			expectedTicketNameList.add(t.getName());
 		}
 
@@ -121,17 +121,17 @@ public class StreamMethodsTest {
 	@Test
 	public void testOtherMaps() {
 
-		List<FamilyTicketDto> tickets = Arrays.asList(
-				FamilyTicketDto.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 2").memberNames(Arrays.asList("Robert", "Mary")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 3").memberNames(Arrays.asList("William", "Barbara", "Lisa")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 4").memberNames(Arrays.asList("Donald", "Ashley")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 5").memberNames(Collections.singletonList("Kevin")).sold(true).build()
+		List<FamilyTicket> tickets = Arrays.asList(
+				FamilyTicket.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 2").memberNames(Arrays.asList("Robert", "Mary")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 3").memberNames(Arrays.asList("William", "Barbara", "Lisa")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 4").memberNames(Arrays.asList("Donald", "Ashley")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 5").memberNames(Collections.singletonList("Kevin")).sold(true).build()
 		);
 
 		int sumOfMembers = tickets.stream().mapToInt(it -> it.getMemberNames().size()).sum();
 		int expectedSum = 0;
-		for (FamilyTicketDto t : tickets) {
+		for (FamilyTicket t : tickets) {
 			expectedSum += t.getMemberNames().size();
 		}
 
@@ -163,21 +163,21 @@ public class StreamMethodsTest {
 	@Test
 	public void testFlatMap() {
 
-		List<FamilyTicketDto> tickets = Arrays.asList(
-				FamilyTicketDto.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 2").memberNames(Arrays.asList("Robert", "Mary")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 3").memberNames(Arrays.asList("William", "Barbara", "Lisa")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 4").memberNames(Arrays.asList("Donald", "Ashley")).sold(true).build(),
-				FamilyTicketDto.builder().name("Ticket 5").memberNames(Collections.singletonList("Kevin")).sold(true).build()
+		List<FamilyTicket> tickets = Arrays.asList(
+				FamilyTicket.builder().name("Ticket 1").memberNames(Arrays.asList("John", "Jennifer")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 2").memberNames(Arrays.asList("Robert", "Mary")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 3").memberNames(Arrays.asList("William", "Barbara", "Lisa")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 4").memberNames(Arrays.asList("Donald", "Ashley")).sold(true).build(),
+				FamilyTicket.builder().name("Ticket 5").memberNames(Collections.singletonList("Kevin")).sold(true).build()
 		);
 
 		List<String> members = tickets.stream()
-				.map(FamilyTicketDto::getMemberNames) // map to Stream<List<String>> (list of members)
+				.map(FamilyTicket::getMemberNames) // map to Stream<List<String>> (list of members)
 				.flatMap(Collection::stream)          // map to Stream<String>
 				.collect(Collectors.toList());        // collect to List<String>
 
 		Set<String> expectedMembers = new HashSet<>();
-		for (FamilyTicketDto t : tickets) {
+		for (FamilyTicket t : tickets) {
 			expectedMembers.addAll(t.getMemberNames());
 		}
 
@@ -191,22 +191,22 @@ public class StreamMethodsTest {
 	@Test
 	public void testPeek() {
 
-		List<TicketDto> tickets = Arrays.asList(
-				new TicketDto("Ticket 1", true),
-				new TicketDto("Ticket 2"),
-				new TicketDto("Ticket 3"),
-				new TicketDto("Ticket 4", true),
-				new TicketDto("Ticket 5", true)
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("Ticket 1", true),
+				new Ticket("Ticket 2"),
+				new Ticket("Ticket 3"),
+				new Ticket("Ticket 4", true),
+				new Ticket("Ticket 5", true)
 		);
 
 		long actualCount = tickets.stream()
-				.map(TicketDto::copy)
+				.map(Ticket::copy)
 				.peek(it -> it.setSold(!it.getSold()))
-				.filter(TicketDto::getSold).count();
+				.filter(Ticket::getSold).count();
 
-		List<TicketDto> result = new ArrayList<>();
-		for (TicketDto t : tickets) {
-			TicketDto tc = t.copy();
+		List<Ticket> result = new ArrayList<>();
+		for (Ticket t : tickets) {
+			Ticket tc = t.copy();
 			tc.setSold(!tc.getSold());
 			if (tc.getSold()) {
 				result.add(tc);
@@ -223,24 +223,24 @@ public class StreamMethodsTest {
 	@Test
 	public void testToArray() {
 
-		List<TicketDto> tickets = Arrays.asList(
-				new TicketDto("Ticket 1", true),
-				new TicketDto("Ticket 2"),
-				new TicketDto("Ticket 3"),
-				new TicketDto("Ticket 4", true),
-				new TicketDto("Ticket 5", true)
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("Ticket 1", true),
+				new Ticket("Ticket 2"),
+				new Ticket("Ticket 3"),
+				new Ticket("Ticket 4", true),
+				new Ticket("Ticket 5", true)
 		);
 
-		TicketDto[] ticketsPrimitiveArray = tickets.stream().filter(TicketDto::getSold).toArray(TicketDto[]::new);
+		Ticket[] ticketsPrimitiveArray = tickets.stream().filter(Ticket::getSold).toArray(Ticket[]::new);
 		int soldTicketsNumber = 0;
-		for (TicketDto t : tickets) {
+		for (Ticket t : tickets) {
 			if (t.getSold()) {
 				soldTicketsNumber++;
 			}
 		}
-		TicketDto[] expectedArray = new TicketDto[soldTicketsNumber];
+		Ticket[] expectedArray = new Ticket[soldTicketsNumber];
 		int p = 0;
-		for (TicketDto t : tickets) {
+		for (Ticket t : tickets) {
 			if (t.getSold()) {
 				expectedArray[p] = t;
 				p++;
@@ -347,18 +347,18 @@ public class StreamMethodsTest {
 	 */
 	@Test
 	public void testMinAndMax() {
-		List<TicketDto> tickets = Arrays.asList(
-				TicketDto.builder().name("Ticket 1").price(2).build(),
-				TicketDto.builder().name("Ticket 2").price(5).build(),
-				TicketDto.builder().name("Ticket 3").price(9).build(),
-				TicketDto.builder().name("Ticket 4").price(4).build()
+		List<Ticket> tickets = Arrays.asList(
+				Ticket.builder().name("Ticket 1").price(2).build(),
+				Ticket.builder().name("Ticket 2").price(5).build(),
+				Ticket.builder().name("Ticket 3").price(9).build(),
+				Ticket.builder().name("Ticket 4").price(4).build()
 		);
 
-		TicketDto maxPriceTicket = tickets.stream().max(Comparator.comparing(TicketDto::getPrice)).orElse(null);
-		TicketDto minPriceTicket = tickets.stream().min(Comparator.comparing(TicketDto::getPrice)).orElse(null);
+		Ticket maxPriceTicket = tickets.stream().max(Comparator.comparing(Ticket::getPrice)).orElse(null);
+		Ticket minPriceTicket = tickets.stream().min(Comparator.comparing(Ticket::getPrice)).orElse(null);
 
-		TicketDto expectedMaxPriceTicket = null;
-		for (TicketDto t : tickets) {
+		Ticket expectedMaxPriceTicket = null;
+		for (Ticket t : tickets) {
 			if (expectedMaxPriceTicket == null) {
 				expectedMaxPriceTicket = t;
 				continue;
@@ -367,8 +367,8 @@ public class StreamMethodsTest {
 				expectedMaxPriceTicket = t;
 			}
 		}
-		TicketDto expectedMinPriceTicket = null;
-		for (TicketDto t : tickets) {
+		Ticket expectedMinPriceTicket = null;
+		for (Ticket t : tickets) {
 			if (expectedMinPriceTicket == null) {
 				expectedMinPriceTicket = t;
 				continue;

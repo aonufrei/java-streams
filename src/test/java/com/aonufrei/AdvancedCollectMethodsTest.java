@@ -1,6 +1,6 @@
 package com.aonufrei;
 
-import com.aonufrei.dto.TicketDto;
+import com.aonufrei.dto.Ticket;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -108,20 +108,20 @@ public class AdvancedCollectMethodsTest {
 	 */
 	@Test
 	public void testToMap() {
-		List<TicketDto> tickets = Arrays.asList(
-				TicketDto.builder().name("Ticket 1").price(1000).build(),
-				TicketDto.builder().name("Ticket 2").price(2000).build(),
-				TicketDto.builder().name("Ticket 3").price(1000).build(),
-				TicketDto.builder().name("Ticket 4").price(3000).build(),
-				TicketDto.builder().name("Ticket 5").price(2000).build()
+		List<Ticket> tickets = Arrays.asList(
+				Ticket.builder().name("Ticket 1").price(1000).build(),
+				Ticket.builder().name("Ticket 2").price(2000).build(),
+				Ticket.builder().name("Ticket 3").price(1000).build(),
+				Ticket.builder().name("Ticket 4").price(3000).build(),
+				Ticket.builder().name("Ticket 5").price(2000).build()
 		);
 
-		Map<Integer, List<TicketDto>> actual = tickets.stream().collect(
-				Collectors.toMap(TicketDto::getPrice,                                                // what to pick as a key for map
+		Map<Integer, List<Ticket>> actual = tickets.stream().collect(
+				Collectors.toMap(Ticket::getPrice,                                                // what to pick as a key for map
 				Collections::singletonList,                                                          // what to pick as a value for a map
 				(f, s) -> Stream.of(f, s).flatMap(Collection::stream).collect(Collectors.toList())));// what to do with the value when there are two same keys
 
-		Map<Integer, List<TicketDto>> expected = new HashMap<Integer, List<TicketDto>>() {{
+		Map<Integer, List<Ticket>> expected = new HashMap<Integer, List<Ticket>>() {{
 			put(1000, tickets.stream().filter(it -> it.getPrice() == 1000).collect(Collectors.toList()));
 			put(2000, tickets.stream().filter(it -> it.getPrice() == 2000).collect(Collectors.toList()));
 			put(3000, tickets.stream().filter(it -> it.getPrice() == 3000).collect(Collectors.toList()));

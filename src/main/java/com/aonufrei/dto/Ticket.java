@@ -13,7 +13,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketDto {
+public class Ticket {
 
 	private String id = UUID.randomUUID().toString();
 
@@ -25,23 +25,23 @@ public class TicketDto {
 
 	private Boolean sold = false;
 
-	public TicketDto(String name) {
+	public Ticket(String name) {
 		this.name = name;
 	}
 
-	public TicketDto(String name, boolean sold) {
+	public Ticket(String name, boolean sold) {
 		this.name = name;
 		this.sold = sold;
 	}
 
-	public TicketDto(String id, String name, boolean sold) {
+	public Ticket(String id, String name, boolean sold) {
 		this.id = id;
 		this.name = name;
 		this.sold = sold;
 	}
 
-	public TicketDto copy() {
-		return TicketDto.builder()
+	public Ticket copy() {
+		return Ticket.builder()
 				.id(id)
 				.name(name)
 				.sold(sold)

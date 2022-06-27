@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FamilyTicketDto {
+public class FamilyTicket {
 
 	private String id = UUID.randomUUID().toString();
 
